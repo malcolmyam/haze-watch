@@ -1,0 +1,22 @@
+
+/*
+@author: Malcolm Yam
+main base overrides and stylesheet
+*/
+body{font-family: 'Lato', sans-serif;}
+
+.psi-heading{color:white;font-size: 10em;}
+.psi-title{}
+.psi-quote{color:rgba(255,255,255,0.8);}
+
+.psi-good{color:#06960F;}
+.psi-moderate{color:#076FA5;}
+.psi-unhealthy{color:#F8D200;}
+.psi-very-unhealthy{color:#FFBF00;}
+.psi-hazardous{color:#FF0000;}
+
+.psi-reading{font-weight:300;color: #B9B9B9;font-size:2rem;}
+.psi-current{font-weight:600; color: white; background-color: rgba(255,255,255,0.6); }
+.psi-side-heading{text-shadow: 2px 2px 2px grey;}
+
+#psi-main-current{}

@@ -1,20 +1,23 @@
-##Project Title
+## Project Title
 HAZE WATCH web app to check out the current haze levels based in Singapore
 
-##Tech/Framework used
+## Tech/Framework used
 **Built with**
 - Bootstrap 4
 - JavaScript
 - HTML5
 
-##Features
+## Features
 
-##Credits
+## Credits
 NEA 
 Govtech
 
-##References
+## References
 https://www.haze.gov.sg/docs/default-source/faq/computation-of-the-pollutant-standards-index-(psi).pdf
+
+
+## Other Haze Apps
 
 PSI Value	
 0 - 50

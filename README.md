@@ -26,8 +26,8 @@ Govtech
 
 ## References
 * <https://www.haze.gov.sg/docs/default-source/faq/computation-of-the-pollutant-standards-index-(psi).pdf>
-* <https://data.gov.sg/dataset/psi:: https://api.data.gov.sg/v1/environment/psi>
-* <https://data.gov.sg/dataset/pm25::https://api.data.gov.sg/v1/environment/pm25>
+* <https://data.gov.sg/dataset/psi> :: <https://api.data.gov.sg/v1/environment/psi>
+* <https://data.gov.sg/dataset/pm25> :: <https://api.data.gov.sg/v1/environment/pm25>
 
 ## Other Haze Apps
 * Singapore Air Quality: <https://apps.apple.com/sg/app/singapore-air-quality/id841263655>

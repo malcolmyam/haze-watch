@@ -35,7 +35,8 @@ $(document).ready(function () {
             co: 0,
             o: 0,
             no: 0,
-            status: "healthy"
+            status: "healthy",
+            hex: "#06960F"
         },
         {
             psi: 50,
@@ -45,7 +46,8 @@ $(document).ready(function () {
             co: 5,
             o: 118,
             no: 0,
-            status: "moderate"
+            status: "moderate",
+            hex: "#076FA5"
         },
         {
             psi: 100,
@@ -55,7 +57,8 @@ $(document).ready(function () {
             co: 10,
             o: 157,
             no: 0,
-            status: "unhealthy"
+            status: "unhealthy",
+            hex: "#F8D200"
         },
         {
             psi: 200,
@@ -65,7 +68,9 @@ $(document).ready(function () {
             co: 17,
             o: 235,
             no: 1130,
-            status: "Very Unhealthy"
+            status: "very-unhealthy",
+            hex: "#FFBF00",
+            
         },
         {
             psi: 300,
@@ -75,7 +80,8 @@ $(document).ready(function () {
             co: 34,
             o: 785,
             no: 2260,
-            status: "Hazardous"
+            status: "hazardous",
+            hex: "#FFBF00"
         },
         {
             psi: 400,
@@ -84,7 +90,9 @@ $(document).ready(function () {
             so: 2100,
             co: 46,
             o: 980,
-            no: 3000
+            no: 3000,
+            status: "hazardous",
+            hex: "#FF0000"
         },
         {
             psi: 500,
@@ -94,7 +102,8 @@ $(document).ready(function () {
             co: 57.5,
             o: 1180,
             no: 3750,
-            status: "Hazardous"
+            status: "Hazardous",
+            hex: "#FF0000"
         }
     ];
 
@@ -159,8 +168,8 @@ $(document).ready(function () {
 
             pm25_one_hourly = msg.items[0].readings.pm25_one_hourly.north;
             console.log("PM25 one Hourly: " + pm25_one_hourly);
-            console.log("estimated 1hr PSI based on PM25: " + calHourPSI(40, "pm25"));
-            console.log("Estimate 1hr PSI " + calEstimatedHourPSI(pm25_one_hourly, pm10_sub_index, so2_sub_index, co_eight_hour_max, o3_sub_index, no2_one_hour_max));
+            //console.log("estimated 1hr PSI based on PM25: " + calHourPSI(40, "pm25"));
+            //console.log("Estimate 1hr PSI " + calEstimatedHourPSI(pm25_one_hourly, pm10_sub_index, so2_sub_index, co_eight_hour_max, o3_sub_index, no2_one_hour_max));
 
         })
         .fail(function (xhr, text) {
@@ -175,7 +184,9 @@ $(document).ready(function () {
     });
 
 
-
+    /**
+     * Get calculated 1hr PSI ranges based on PM2.5 and other toxin level
+     */
     function getPSIReadings(query_timestamp){
 
         let psiReadings;
@@ -228,19 +239,7 @@ $(document).ready(function () {
                
                updatePSIReadings(psiHourlyReadings);
                //readings.psi_twenty_four_hourly[$("#psi-main-current").data("psi-main-current")
-               toggleMainPSI(psiHourlyReadings[$("#psi-main-current").data("psi-main-current")]);
-                /*
-                pm10_sub_index = readings.pm10_sub_index.north;
-                so2_sub_index = readings.so2_sub_index.north;
-                co_eight_hour_max = readings.co_eight_hour_max.north;
-                o3_sub_index = readings.o3_sub_index.north;
-                no2_one_hour_max = readings.no2_one_hour_max.north;
-                */
-                
-               // console.log("Estimate 1hr PSI " + calEstimatedHourPSI(pm25_one_hourly, pm10_sub_index, so2_sub_index, co_eight_hour_max, o3_sub_index, no2_one_hour_max));
-    
-                //update all with PM25
-    
+               toggleMainPSI(psiHourlyReadings[$("#psi-main-current").data("psi-main-current")]);    
             })
             .fail(function (xhr, text) {
                 var errorMessage = xhr.status + ': ' + xhr.statusText
@@ -255,7 +254,6 @@ $(document).ready(function () {
 
     function getPSIHourly(){
 
-        
         let getPM25 = $.ajax({
             url: PM25_URL,
             type: "GET",
@@ -267,8 +265,8 @@ $(document).ready(function () {
         .done(function (msg) {
             var pm25Hourly = [];
 
-
             pm25_one_hourly = msg.items[0].readings.pm25_one_hourly.north;
+            
             console.log("PM25 one Hourly: " + pm25_one_hourly);
             console.log("estimated 1hr PSI based on PM25: " + calHourPSI(40, "pm25"));
             console.log("Estimate 1hr PSI " + calEstimatedHourPSI(pm25_one_hourly, pm10_sub_index, so2_sub_index, co_eight_hour_max, o3_sub_index, no2_one_hour_max));
@@ -279,6 +277,36 @@ $(document).ready(function () {
         .fail(function (xhr, text) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
             console.log('Error - ' + errorMessage);
+        });
+    }
+
+    /*
+    * update UI based on just PM2.5 values
+    */
+    function getPM25Hourly(){
+        let getPM25 = $.ajax({
+            url: PM25_URL,
+            type: "GET",
+            dataType: "json",
+            data: {
+                "date_time": query_date_time
+            }
+        })
+        .done(function (msg) {
+            var pm25Readings = msg.items[0].readings.pm25_one_hourly;
+            var pm25HourlyReadings = [];
+        
+            for(var i = 0; i < location_arr.length; i++){
+                pm25HourlyReadings[location_arr[i]] = pm25Readings[location_arr[i]];    
+            }
+           
+           updatePSIReadings(pm25HourlyReadings, "pm25");
+           toggleMainPSI(pm25HourlyReadings[$("#psi-main-current").data("psi-main-current")], "pm25"); 
+
+        })
+        .fail(function (xhr, text) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            console.log('Error getPM25Hourly() - ' + errorMessage);
         });
     }
 
@@ -299,7 +327,7 @@ $(document).ready(function () {
     /**
      * Updates the main content reading for current region
      */
-    function toggleMainPSI(reading){
+    function toggleMainPSI(reading, indexCategory = "psi"){
         $("#psi-main-current").html(reading);
 
         //inject current sub style background color
@@ -309,6 +337,8 @@ $(document).ready(function () {
         var current = $("#psi-main-current").data("psi-main-current");
         $("div[data-psi-region='" + current +"']").addClass("psi-current rounded"); 
         $("div[data-psi-region='" + current +"'] .psi-region-text").addClass("psi-side-heading"); 
+
+        $(".main-bg").css("background-color", getReadingHex(reading,indexCategory));
     }
     //todo: modify main text shadow to suit the current status
     function getPSIShadow(psi){
@@ -360,8 +390,10 @@ $(document).ready(function () {
 
     }
 
-    function styleReading(reading){
-        return "<span style='color:" + getHex(reading)
+    function styleReading(reading, indexCategory = "psi"){
+        //console.log("styleReading" + reading + ":indexcat:" + indexCategory);
+        //console.log(getStatus(reading, indexCategory))
+        return "<span style='color:" + getReadingHex(reading, indexCategory)
         + " '> " + reading 
        // + getStatus(reading)
         + "</span>";
@@ -372,9 +404,9 @@ $(document).ready(function () {
     }
 
     //refresh all UI related to Readings
-    function updatePSIReadings(currentReadings){
+    function updatePSIReadings(currentReadings, indexCategory="psi"){
         for(var i = 0; i < location_arr.length; i++){
-           $("#psi-" + location_arr[i]).html(styleReading(currentReadings[location_arr[i]]));
+           $("#psi-" + location_arr[i]).html(styleReading(currentReadings[location_arr[i]], indexCategory));
         }
     }
     /*
@@ -389,13 +421,17 @@ $(document).ready(function () {
         for (var i = 1; i < psiIndexCategory.length; i++) {
             if (reading <= psiIndexCategory[i][category]) {
                 psi = Math.round((psiIndexCategory[i].psi - psiIndexCategory[i - 1].psi) / (psiIndexCategory[i][category] - psiIndexCategory[i - 1][category]) * (reading - psiIndexCategory[i - 1][category]) + psiIndexCategory[i - 1].psi);
-                console.log("reading: " + reading + " category: " + category + "psi" + psi);
+                //console.log("reading: " + reading + " category: " + category + "psi" + psi);
                 return psi;
             }
         }
         return 0;
     }
 
+    /*
+    * Calculate the Hourly PSI index based on the air pollution indexes
+    * PM25 hourly is used here
+    */
     function calEstimatedHourPSI(pm25, pm10, so, co, o, no) {
 
         return Math.max(
@@ -408,10 +444,27 @@ $(document).ready(function () {
         );
     }
 
-    function getStatus(reading, indexCategory){
-        for (var i = 0 ; i  < psiIndexCategory.length; i++){
-            if(reading <= psiIndexCategory[i]["psi"]){
+    /*
+     * Return the status based on the index reading 
+     */
+    function getStatus(reading, indexCategory="psi"){
+        //console.log("getStatus: " + reading + ":category:" + indexCategory);
+        for (var i = 1 ; i  < psiIndexCategory.length; i++){
+            if(reading <= psiIndexCategory[i][indexCategory]){
+                //console.log("getStatus()...status: " + psiIndexCategory[i-1]["status"]);
                 return psiIndexCategory[i-1]["status"];
+            }
+        }   
+        return "NA";
+    }
+
+    /**
+     * Return hex color code based on the index reading
+     */
+    function getReadingHex(reading, indexCategory="psi"){
+        for (var i = 1 ; i  < psiIndexCategory.length; i++){
+            if(reading <= psiIndexCategory[i][indexCategory]){
+                return psiIndexCategory[i-1]["hex"];
             }
         }   
         return "NA";
@@ -419,7 +472,14 @@ $(document).ready(function () {
 
     $('#btn-pm25').click(function (e) {
         e.preventDefault();
-        console.log("pm25 clickced");
+        
+        getPM25Hourly("");
+        /*
+        getStatus(11,"pm25");
+        getStatus(55,"pm25");
+        getStatus(56,"pm25");
+        getStatus(150,"pm25");
+        getStatus(151,"pm25");*/
     });
 
     $('#btn-hourly-psi').click(function (e) {

@@ -344,10 +344,6 @@ $(document).ready(function () {
         );
 
     }
-    //todo: modify main text shadow to suit the current status
-    function getPSIShadow(psi) {
-
-    }
 
     function updateTimeDisplay() {
         let now = new Date();
@@ -358,40 +354,6 @@ $(document).ready(function () {
         let y = now.getYear();
         let time = h + ':' + m + "on " + dd + " " + mm + " " + y;
         $("#date-time").html(now.toString());
-    }
-
-    //return color code
-    function processPSI(psiIndex) {
-        let status = "NA";
-        if (psiIndex <= 50) {
-            status = "Good";
-        } else if (psiIndex >= 51 && psiIndex <= 100) {
-            status = "Moderate";
-        } else if (psiIndex >= 101 && psiIndex <= 200) {
-            status = "Unhealty";
-        } else if (psiIndex >= 201 && psiIndex <= 300) {
-            status = "Very Unhealthy";
-        } else if (psiIndex > 300) {
-            status = "Hazardous";
-        }
-
-        return status;
-    }
-
-
-    function processPM25(pm25) {
-        if (pm25 <= 12) {
-            status = "Good";
-        } else if (pm25 <= 55) {
-            status = "moderate";
-        } else if (pm25 <= 150) {
-            status = "unhealthy";
-        } else if (pm25 <= 250) {
-            status = "Very Unhealthy";
-        } else {
-            status = "Hazardous";
-        }
-
     }
 
     function styleReading(reading, indexCategory = "psi") {

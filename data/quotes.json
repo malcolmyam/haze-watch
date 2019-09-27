@@ -1,0 +1,25 @@
+{
+	"healthy": [
+        "Today, it's a great day to head out to play!!! Let the kiddos run...Let it go!... It's good, what are you waiting for..!!", 
+        "It's finally green!!! Time to play. Exercise. Breath in the fresh air.",
+        "There is no such thing as bad weather, only different kinds of good weather."
+    ],
+    "moderate": [
+        "Time to start powering up on those vitamins and take exercise slowly",
+        "Let's hope a better day comes. It ain't too bad so far.. Chill"
+    ],
+    "unhealthy": [
+        "Cut down on all outdoor activities. Start having home activities with your kids",
+        "The fridge needs clearing. Don't bother heading out to eat. Cookin."
+    ],
+    "very-unhealthy":[
+        "It's getting bad...Wearing a mask is a MUST",
+        "It's a great time to start ordering stuff at home. Or maybe start going on a holiday. Run away."
+    ],
+    "hazardous": [
+        "HIDE! In anyway possible. Hide in the house. Cook from home. No kids outside",
+        "RUN! Get your passport and run away as far as you can.. Seriously."
+
+    ]
+    
+}

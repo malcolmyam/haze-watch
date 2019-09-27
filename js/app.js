@@ -208,7 +208,7 @@ $(document).ready(function () {
             type: "GET",
             dataType: "json",
             data: {
-                "date_time": query_date_time
+                "date_time": query_timestamp
             }
         })
         .done(function (msg) {
@@ -219,7 +219,7 @@ $(document).ready(function () {
                 type: "GET",
                 dataType: "json",
                 data: {
-                    "date_time": query_date_time
+                    "date_time": query_timestamp
                 }
             })
 
@@ -238,17 +238,8 @@ $(document).ready(function () {
                         psiReadings.o3_sub_index[location_arr[i]],
                         psiReadings.no2_one_hour_max[location_arr[i]],
                         ); 
-                    console.log("Location" + location_arr[i] + "Cal estimated.. " + calEstimatedHourPSI(
-                        psiHourly.pm25_one_hourly[location_arr[i]],
-                        psiReadings.pm10_sub_index[location_arr[i]],
-                        psiReadings.so2_sub_index[location_arr[i]],
-                        psiReadings.co_eight_hour_max[location_arr[i]],
-                        psiReadings.o3_sub_index[location_arr[i]],
-                        psiReadings.no2_one_hour_max[location_arr[i]],
-                        ));
                 }
-                console.log("PSI Location Central " + psiHourlyReadings["central"]);
-               
+                //console.log("PSI Location Central " + psiHourlyReadings["central"]);
                
                updatePSIReadings(psiHourlyReadings);
                //readings.psi_twenty_four_hourly[$("#psi-main-current").data("psi-main-current")
@@ -296,7 +287,7 @@ $(document).ready(function () {
     /*
     * update UI based on just PM2.5 values
     */
-    function getPM25Hourly(){
+    function getPM25Hourly(query_date_time){
         let getPM25 = $.ajax({
             url: PM25_URL,
             type: "GET",
@@ -505,16 +496,59 @@ $(document).ready(function () {
         return "NA";
     }
 
+    /*
+     * Convert time to API timestamp mode
+     */
+    function timeConvert(){
+        var today = new Date();
+        var dd = padZero(today.getDate());
+        var mm = padZero(today.getMonth() + 1);
+        var yyyy = padZero(today.getFullYear());
+        var hh = padZero(today.getHours());
+        var min = padZero(today.getMinutes());
+        var ss = padZero(today.getSeconds());
+
+        return yyyy + "-" + mm + "-" + dd + hh + ":" + min + ":" + ss +  "T" + "+08:00";
+    }
+
+    /*
+     * adapted from w3schools
+     */
+    function padZero(i){
+        if (i < 10) {
+            i = "0" + i;
+          }
+        return i;
+    }
+
+
+    function getDate(offset){
+		var today = new Date();
+		
+		var calculatedDate = new Date();
+		calculatedDate.setDate(calculatedDate.getDate() - offset);
+		
+		var dd = calculatedDate.getDate();
+		var mm = calculatedDate.getMonth()+1; //January is 0!
+		var yyyy = calculatedDate.getFullYear();
+		if(dd<10){
+			dd='0'+dd;
+		} 
+		if(mm<10){
+			mm='0'+mm;
+		}
+		return yyyy + '-' + mm + '-' + dd;
+	}
     $('#btn-pm25').click(function (e) {
         e.preventDefault();
         
-        getPM25Hourly("");
+        getPM25Hourly(timeConvert());
     });
 
     $('#btn-hourly-psi').click(function (e) {
         e.preventDefault();
 
-        getPSIReadings("");
+        getPSIReadings(timeConvert());
 
     });
 

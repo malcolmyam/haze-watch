@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     //decide on the current mode of psi setting
     let current_mode_arr = ["hourly_psi","pm25","twenty_four_hourly_psi"]
-    let current_mode = "";
+    let current_mode = "psi";
 
     let psiIndexCategory = [{
             psi: 0,
@@ -142,12 +142,13 @@ $(document).ready(function () {
 
 
             $("#psi-main-current").html(readings.psi_twenty_four_hourly[$("#psi-main-current").data("psi-main-current")]);
-
+            
+            var current = $("#psi-main-current").data("psi-main-current");
             //inject current sub style background color
             $("div[data-psi-region!='" + current +"']").removeClass("psi-current rounded");
             $("div[data-psi-region!='" + current +"'] .psi-side-heading").removeClass("psi-side-heading");
             //toggle style for sidebar
-            var current = $("#psi-main-current").data("psi-main-current");
+            
             $("div[data-psi-region='" + current +"']").addClass("psi-current rounded"); 
             $("div[data-psi-region='" + current +"'] .psi-region-text").addClass("psi-side-heading"); 
 
@@ -333,17 +334,16 @@ $(document).ready(function () {
      */
     function toggleMainPSI(reading, indexCategory = "psi"){
         $("#psi-main-current").html(reading);
-
+        //toggle style for sidebar
+        var current = $("#psi-main-current").data("psi-main-current");
         //inject current sub style background color
         $("div[data-psi-region!='" + current +"']").removeClass("psi-current rounded");
         $("div[data-psi-region!='" + current +"'] .psi-side-heading").removeClass("psi-side-heading");
-        //toggle style for sidebar
-        var current = $("#psi-main-current").data("psi-main-current");
+       
         $("div[data-psi-region='" + current +"']").addClass("psi-current rounded"); 
         $("div[data-psi-region='" + current +"'] .psi-region-text").addClass("psi-side-heading"); 
 
         $(".main-bg").css("background-color", getReadingHex(reading,indexCategory));
-        console.log("inside reading..." + reading);
         //console.log(getReadingDisplay(reading,indexCategory));
         $(".reading-display").html( getReadingDisplay(reading,indexCategory));
 
@@ -521,28 +521,28 @@ $(document).ready(function () {
         return i;
     }
 
-
     //-----app and nav logic
-
     $('#btn-pm25').click(function (e) {
         e.preventDefault();
+        current_mode = "pm25";
         getPM25Hourly(timeConvert());
     });
 
     $('#btn-hourly-psi').click(function (e) {
         e.preventDefault();
+        current_mode = "psi";
         getPSIReadings(timeConvert());
 
     });
 
-
-    $(".psi-reading").click(function(){   
+    $(".psi-reading").click(function(e){   
         e.preventDefault(); 
         var region = $(this).data("psi-region");
         //do updates for region 
-        $("#current-locale").html(region);
-        //get current mode 1hr psi // pm25
-
+        $("#current-locale").html(region).attr("data-current-locale",region);
+        $("#psi-main-current").data("psi-main-current", region);
+        //data-current-locale
+         toggleMainPSI($(".psi-reading[data-psi-region='"+ region +"'] .psi-value").text().trim(), current_mode);
         //update main panel
 
         //update subpanel

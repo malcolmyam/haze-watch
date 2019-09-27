@@ -12,7 +12,6 @@ $(document).ready(function () {
     let query_date_time = "2019-09-25T11:00:00+08:00"; //2019-09-25T11:00:00+08:00
     let query_date = "";
     let location_arr = ["north", "south", "east", "west", "central"];
-    let os
     let currentLocation = "west";
 
     let psi_index = ["pm25_one_hourly", "pm10_sub_index", "so2_sub_index", "co_eight_hour_max", "o3_sub_index", "no2_one_hour_max"];
@@ -36,6 +35,7 @@ $(document).ready(function () {
             o: 0,
             no: 0,
             status: "healthy",
+            display: "Awesome",
             hex: "#06960F"
         },
         {
@@ -47,6 +47,7 @@ $(document).ready(function () {
             o: 118,
             no: 0,
             status: "moderate",
+            display: "Meh...",
             hex: "#076FA5"
         },
         {
@@ -58,6 +59,7 @@ $(document).ready(function () {
             o: 157,
             no: 0,
             status: "unhealthy",
+            display: "Little Yucky",
             hex: "#F8D200"
         },
         {
@@ -69,6 +71,7 @@ $(document).ready(function () {
             o: 235,
             no: 1130,
             status: "very-unhealthy",
+            display: "Very Yucky",
             hex: "#FFBF00",
             
         },
@@ -81,6 +84,7 @@ $(document).ready(function () {
             o: 785,
             no: 2260,
             status: "hazardous",
+            display: "Hazardously Terrible",
             hex: "#FFBF00"
         },
         {
@@ -92,6 +96,7 @@ $(document).ready(function () {
             o: 980,
             no: 3000,
             status: "hazardous",
+            display: "Horrendously Terrible",
             hex: "#FF0000"
         },
         {
@@ -103,9 +108,17 @@ $(document).ready(function () {
             o: 1180,
             no: 3750,
             status: "Hazardous",
+            display: "Why Bother. RUN!",
             hex: "#FF0000"
         }
     ];
+    let quotes = "";
+
+    $.getJSON('data/quotes.json', function (q){
+        quotes = q;
+    });
+    //console.log("quotes");
+    
 
     let getPSI = $.ajax({
             url: PSI_URL,
@@ -339,6 +352,15 @@ $(document).ready(function () {
         $("div[data-psi-region='" + current +"'] .psi-region-text").addClass("psi-side-heading"); 
 
         $(".main-bg").css("background-color", getReadingHex(reading,indexCategory));
+        console.log("inside reading..." + reading);
+        //console.log(getReadingDisplay(reading,indexCategory));
+        $(".reading-display").html( getReadingDisplay(reading,indexCategory));
+
+        //update quote to suit
+        $(".blockquote").html(
+            quotes[getStatus(reading, indexCategory)][ Math.floor(Math.random() * (quotes[getStatus(reading, indexCategory)].length))]
+            );
+
     }
     //todo: modify main text shadow to suit the current status
     function getPSIShadow(psi){
@@ -464,7 +486,20 @@ $(document).ready(function () {
     function getReadingHex(reading, indexCategory="psi"){
         for (var i = 1 ; i  < psiIndexCategory.length; i++){
             if(reading <= psiIndexCategory[i][indexCategory]){
+                console.log("hex" + psiIndexCategory[i-1]["hex"]);
                 return psiIndexCategory[i-1]["hex"];
+            }
+        }   
+        return "NA";
+    }
+
+    /**
+     * Return reading display title text based on the index reading
+     */
+    function getReadingDisplay(reading, indexCategory="psi"){
+        for (var i = 1 ; i  < psiIndexCategory.length; i++){
+            if(reading <= psiIndexCategory[i][indexCategory]){
+                return psiIndexCategory[i-1]["display"];
             }
         }   
         return "NA";
@@ -474,12 +509,6 @@ $(document).ready(function () {
         e.preventDefault();
         
         getPM25Hourly("");
-        /*
-        getStatus(11,"pm25");
-        getStatus(55,"pm25");
-        getStatus(56,"pm25");
-        getStatus(150,"pm25");
-        getStatus(151,"pm25");*/
     });
 
     $('#btn-hourly-psi').click(function (e) {

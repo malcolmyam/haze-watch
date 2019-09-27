@@ -507,8 +507,8 @@ $(document).ready(function () {
         var hh = padZero(today.getHours());
         var min = padZero(today.getMinutes());
         var ss = padZero(today.getSeconds());
-
-        return yyyy + "-" + mm + "-" + dd + hh + ":" + min + ":" + ss +  "T" + "+08:00";
+        
+        return yyyy + "-" + mm + "-" + dd + "T" + hh + ":" + min + ":" + ss  + "+08:00";
     }
 
     /*
@@ -522,33 +522,30 @@ $(document).ready(function () {
     }
 
 
-    function getDate(offset){
-		var today = new Date();
-		
-		var calculatedDate = new Date();
-		calculatedDate.setDate(calculatedDate.getDate() - offset);
-		
-		var dd = calculatedDate.getDate();
-		var mm = calculatedDate.getMonth()+1; //January is 0!
-		var yyyy = calculatedDate.getFullYear();
-		if(dd<10){
-			dd='0'+dd;
-		} 
-		if(mm<10){
-			mm='0'+mm;
-		}
-		return yyyy + '-' + mm + '-' + dd;
-	}
+    //-----app and nav logic
+
     $('#btn-pm25').click(function (e) {
         e.preventDefault();
-        
         getPM25Hourly(timeConvert());
     });
 
     $('#btn-hourly-psi').click(function (e) {
         e.preventDefault();
-
         getPSIReadings(timeConvert());
+
+    });
+
+
+    $(".psi-reading").click(function(){   
+        e.preventDefault(); 
+        var region = $(this).data("psi-region");
+        //do updates for region 
+        $("#current-locale").html(region);
+        //get current mode 1hr psi // pm25
+
+        //update main panel
+
+        //update subpanel
 
     });
 

@@ -19,10 +19,9 @@ Simply clone or download the repo
 * Main BG UI changes to fit the haze situation
 
 ## Credits
-NEA 
-
-
-Govtech
+* NEA 
+* Nikita Golubev (Weather icons) from Flaticon <https://www.flaticon.com/packs/weather-and-insurance-2>
+* Govtech
 
 ## References
 * <https://www.haze.gov.sg/docs/default-source/faq/computation-of-the-pollutant-standards-index-(psi).pdf>
